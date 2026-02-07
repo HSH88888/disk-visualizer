@@ -1,0 +1,41 @@
+{
+  "name": "disk-visualizer",
+  "version": "1.0.0",
+  "description": "하드 디스크 용량을 트리맵으로 시각화하는 Electron 앱",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win"
+  },
+  "build": {
+    "appId": "com.diskvisualizer.app",
+    "productName": "Disk Visualizer",
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "icon.ico",
+      "forceCodeSigning": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "keywords": [
+    "electron",
+    "disk",
+    "visualizer",
+    "treemap"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
+    "d3": "^7.8.5"
+  }
+}

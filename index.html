@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
+    <title>Disk Space Visualizer - Mind Map</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- 헤더 -->
+        <header class="header">
+            <div class="header-left">
+                <h1 class="logo">
+                    <span class="logo-icon">💾</span>
+                    Disk Mind Map
+                </h1>
+            </div>
+            <div class="header-center">
+                <!-- 네비게이션 -->
+                <button id="btnBack" class="nav-btn hidden" title="뒤로 가기">⬅️ 뒤로</button>
+                <div class="breadcrumb" id="breadcrumb"></div>
+            </div>
+            <div class="header-right">
+                <button id="selectFolderBtn" class="btn-primary">
+                    <span class="btn-icon">📂</span>
+                    폴더 선택
+                </button>
+            </div>
+        </header>
+
+        <!-- 툴바 -->
+        <div class="toolbar hidden" id="toolbar">
+            <div class="toolbar-left">
+                <button id="btnExplorer" class="tool-btn" title="파일 탐색창 토글">📂 탐색창</button>
+                <span class="toolbar-divider">|</span>
+                <button id="btnExpandAll" class="tool-btn" title="모든 노드 펼쳐서 겹치지 않게">🌳 모두 펼치기</button>
+                <button id="btnExpandLayout" class="tool-btn" title="확장 보기">🔓 펼치기</button>
+                <button id="btnCompactLayout" class="tool-btn" title="컴팩트 보기">🔒 모으기</button>
+                <span class="toolbar-divider">|</span>
+                <button id="btnColorMode" class="tool-btn active" title="색상 모드 전환">🎨 깊이별</button>
+            </div>
+            <div class="toolbar-center">
+                <!-- 검색 -->
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="파일/폴더 검색..." />
+                    <button id="btnSearch" class="search-btn">🔍</button>
+                    <button id="btnClearSearch" class="search-btn hidden">✖️</button>
+                </div>
+            </div>
+            <div class="toolbar-right">
+                <button id="btnTheme" class="tool-btn" title="테마 변경">🎭 퍼플</button>
+                <span class="toolbar-divider">|</span>
+                <button id="btnZoomOut" class="tool-btn" title="축소">➖</button>
+                <span id="zoomLevel">100%</span>
+                <button id="btnZoomIn" class="tool-btn" title="확대">➕</button>
+                <button id="btnZoomFit" class="tool-btn" title="맞춤">🎯</button>
+            </div>
+        </div>
+
+        <!-- 메인 콘텐츠 -->
+        <main class="main-content">
+            <!-- 파일 탐색기 사이드바 -->
+            <aside id="explorerPanel" class="explorer-panel">
+                <div class="explorer-header">
+                    <span>📁 폴더 탐색기</span>
+                    <button id="btnCloseExplorer" class="close-btn">✖️</button>
+                </div>
+                <div id="explorerTree" class="explorer-tree"></div>
+
+                <!-- 파일 목록 영역 -->
+                <div class="explorer-files-section">
+                    <div class="explorer-files-header">
+                        <span>📄 파일 목록</span>
+                        <span id="fileCount" class="file-count">0개</span>
+                    </div>
+                    <div id="explorerFiles" class="explorer-files"></div>
+                </div>
+
+                <!-- 리사이즈 핸들 -->
+                <div id="explorerResizeHandle" class="explorer-resize-handle"></div>
+            </aside>
+
+            <!-- 마인드맵 영역 -->
+            <div class="mindmap-area">
+                <!-- 초기 화면 -->
+                <div id="welcomeScreen" class="welcome-screen">
+                    <div class="welcome-content">
+                        <div class="welcome-icon">🗺️</div>
+                        <h2>디스크 마인드맵</h2>
+                        <p>폴더 구조를 마인드맵으로 시각화합니다.<br>큰 폴더는 크게, 작은 폴더는 작게 표시됩니다.</p>
+                        <button id="welcomeSelectBtn" class="btn-primary btn-large">
+                            <span class="btn-icon">📂</span>
+                            폴더 선택하기
+                        </button>
+                        <div class="tips">
+                            <p>💡 <strong>클릭</strong>: 폴더 안으로 이동</p>
+                            <p>💡 <strong>더블클릭</strong>: 파일 탐색기에서 열기</p>
+                            <p>💡 <strong>마우스 휠</strong>: 확대/축소</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 로딩 화면 -->
+                <div id="loadingScreen" class="loading-screen hidden">
+                    <div class="loading-content">
+                        <div class="spinner"></div>
+                        <h3>스캔 중...</h3>
+                        <p id="loadingText">폴더를 분석하고 있습니다</p>
+                    </div>
+                </div>
+
+                <!-- 마인드맵 캔버스 -->
+                <div id="mindmapContainer" class="mindmap-container hidden">
+                    <svg id="mindmapSvg" class="mindmap-svg"></svg>
+                </div>
+
+                <!-- 툴팁 -->
+                <div id="tooltip" class="tooltip hidden">
+                    <div class="tooltip-name"></div>
+                    <div class="tooltip-size"></div>
+                    <div class="tooltip-percent"></div>
+                    <div class="tooltip-hint">클릭: 들어가기 | 더블클릭: 탐색기 열기</div>
+                </div>
+
+                <!-- 검색 결과 패널 (리사이즈 가능) -->
+                <div id="searchResults" class="search-results hidden">
+                    <div class="search-results-header">
+                        <span id="searchResultCount">검색 결과: 0개</span>
+                        <button id="btnCloseSearch" class="close-btn">✖️</button>
+                    </div>
+                    <div id="searchResultsList" class="search-results-list"></div>
+                    <div class="resize-handle" id="resizeHandle"></div>
+                </div>
+
+                <!-- 범례 -->
+                <div id="legend" class="legend hidden">
+                    <div class="legend-header">
+                        <span class="legend-title" id="legendTitle">🎨 깊이별 색상</span>
+                        <button id="btnToggleLegend" class="legend-toggle">🔄</button>
+                    </div>
+                    <div id="legendItems" class="legend-items"></div>
+                </div>
+            </div><!-- .mindmap-area 끝 -->
+        </main>
+
+        <!-- 푸터 상태바 -->
+        <footer class="footer">
+            <div class="status-bar">
+                <span id="statusText">준비됨</span>
+                <span id="totalSize"></span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+
+</html>
