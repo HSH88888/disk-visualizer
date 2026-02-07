@@ -88,19 +88,43 @@
             <!-- 마인드맵 영역 -->
             <div class="mindmap-area">
                 <!-- 초기 화면 -->
+                <!-- 초기 화면 -->
                 <div id="welcomeScreen" class="welcome-screen">
-                    <div class="welcome-content">
-                        <div class="welcome-icon">🗺️</div>
-                        <h2>디스크 마인드맵</h2>
-                        <p>폴더 구조를 마인드맵으로 시각화합니다.<br>큰 폴더는 크게, 작은 폴더는 작게 표시됩니다.</p>
-                        <button id="welcomeSelectBtn" class="btn-primary btn-large">
-                            <span class="btn-icon">📂</span>
-                            폴더 선택하기
-                        </button>
-                        <div class="tips">
-                            <p>💡 <strong>클릭</strong>: 폴더 안으로 이동</p>
-                            <p>💡 <strong>더블클릭</strong>: 파일 탐색기에서 열기</p>
-                            <p>💡 <strong>마우스 휠</strong>: 확대/축소</p>
+                    <div class="welcome-container">
+                        <!-- Left Side: Text & Controls -->
+                        <div class="welcome-left">
+                            <div class="welcome-header">
+                                <div class="welcome-icon">🗺️</div>
+                                <h2>디스크 마인드맵</h2>
+                                <p>폴더 구조를 마인드맵으로 시각화합니다.<br>큰 폴더는 크게, 작은 폴더는 작게 표시됩니다.</p>
+                            </div>
+
+                            <button id="welcomeSelectBtn" class="btn-primary btn-large">
+                                <span class="btn-icon">📂</span>
+                                폴더 선택하기
+                            </button>
+
+                            <div class="tips">
+                                <p>💡 <strong>클릭</strong>: 폴더 안으로 이동</p>
+                                <p>💡 <strong>더블클릭</strong>: 파일 탐색기에서 열기</p>
+                                <p>💡 <strong>마우스 휠</strong>: 확대/축소</p>
+                            </div>
+                        </div>
+
+                        <!-- Right Side: Image & Notice -->
+                        <div class="welcome-right">
+                            <!-- Windows Notice -->
+                            <div class="windows-notice">
+                                ⚠️ 이 프로그램은 윈도우용 프로그램입니다.<br>
+                                <a href="https://github.com/HSH88888/disk-visualizer/releases" target="_blank">GitHub에서
+                                    exe파일을 받아서 실행하세요</a>
+                            </div>
+
+                            <!-- Preview Image -->
+                            <div class="preview-image-container">
+                                <!-- 사용자가 제공한 이미지로 교체 -->
+                                <img src="./assets/preview.png" alt="Disk Mindmap Preview" class="preview-img">
+                            </div>
                         </div>
                     </div>
                 </div>
